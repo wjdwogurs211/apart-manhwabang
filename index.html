@@ -1,0 +1,307 @@
+<title>아파트 만화방</title>
+<meta name="description" content="로그인 없이 바로 보는 관리사무소 일상툰 「아파트에 살고 있어요」">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Black+Han+Sans&family=Noto+Sans+KR:wght@400;500;700;900&display=swap">
+<style>
+/* 레이아웃: 웹툰 플랫폼 모바일 구조(상단 바 + 홈 / 작품홈 / 세로 스크롤 뷰어), 가운데 최대 720px 기둥 */
+:root {
+  --bg: #ffffff;
+  --sub: #f4f5f8;          /* 구역 바탕, 남색 쪽으로 살짝 기운 회색 */
+  --line: #e4e6ee;
+  --fg: #16181f;
+  --muted: #6b7081;
+  --accent: #ffcc1f;       /* 로고 노랑(민원 전화 프로필) */
+  --accent-ink: #16181f;
+  --navy: #26315e;         /* 시설팀 작업복 */
+  --navy-ink: #ffffff;
+  --chip: #eef0f7;
+  --read: #a3a7b6;
+  --viewer-bg: #ffffff;
+  --bar: rgba(22, 24, 31, .94);
+  --bar-ink: #ffffff;
+  --font-display: "Black Han Sans", "Noto Sans KR", sans-serif;
+  --font-body: "Noto Sans KR", -apple-system, "Apple SD Gothic Neo", "Malgun Gothic", sans-serif;
+  --col: 720px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12141a; --sub: #1b1e27; --line: #2a2e3a; --fg: #eceef4; --muted: #9a9fb1;
+    --chip: #232735; --read: #5d6272; --navy: #9fb0ff; --navy-ink: #12141a; --viewer-bg: #12141a;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #12141a; --sub: #1b1e27; --line: #2a2e3a; --fg: #eceef4; --muted: #9a9fb1;
+  --chip: #232735; --read: #5d6272; --navy: #9fb0ff; --navy-ink: #12141a; --viewer-bg: #12141a;
+  color-scheme: dark;
+}
+* { box-sizing: border-box; }
+body { background: var(--bg); color: var(--fg); font-family: var(--font-body); font-size: 15px; line-height: 1.55; }
+a { color: inherit; text-decoration: none; }
+button { font: inherit; color: inherit; background: none; border: 0; cursor: pointer; }
+:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+.wrap { max-width: var(--col); margin: 0 auto; padding-inline: 16px; }
+
+/* 상단 바 */
+.top { position: sticky; top: env(safe-area-inset-top, 0px); z-index: 20; background: var(--bg); border-bottom: 1px solid var(--line); }
+.top__in { display: flex; align-items: center; gap: 12px; height: 56px; }
+.brand { display: flex; align-items: center; gap: 8px; font-family: var(--font-display); font-size: 21px; letter-spacing: -.01em; }
+.brand img { width: 30px; height: 30px; border-radius: 8px; }
+.brand b { background: var(--accent); color: var(--accent-ink); padding: 0 6px; border-radius: 4px; font-weight: 400; }
+.top nav { margin-left: auto; display: flex; gap: 4px; }
+.top nav a { padding: 6px 10px; border-radius: 999px; font-weight: 700; font-size: 14px; color: var(--muted); }
+.top nav a[aria-current="page"] { color: var(--fg); background: var(--sub); }
+
+/* 홈 */
+.hero { display: block; position: relative; margin-top: 16px; border-radius: 14px; overflow: hidden; background: var(--sub); aspect-ratio: 16 / 9; max-width: 100%; }
+.hero img { width: 100%; height: 100%; object-fit: cover; display: block; }
+.hero__txt { position: absolute; inset: auto 0 0 0; padding: 48px 18px 18px; color: #fff;
+  background: linear-gradient(to top, rgba(10, 12, 20, .78), rgba(10, 12, 20, 0)); }
+.hero__badge { display: inline-block; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 900; padding: 2px 8px; border-radius: 4px; }
+.hero__title { font-family: var(--font-display); font-size: clamp(26px, 6vw, 38px); line-height: 1.15; margin: 8px 0 4px; text-wrap: balance; }
+.hero__sub { margin: 0; font-size: 14px; opacity: .9; }
+.sec { margin-top: 28px; }
+.sec__head { display: flex; align-items: baseline; justify-content: space-between; gap: 12px; margin-bottom: 12px; }
+.sec__title { font-size: 18px; font-weight: 900; margin: 0; letter-spacing: -.02em; }
+.sec__more { font-size: 13px; color: var(--muted); font-weight: 500; }
+.resume { display: flex; gap: 12px; align-items: center; padding: 12px; border-radius: 12px; background: var(--sub); }
+.resume img { width: 96px; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 8px; flex: none; }
+.resume div { min-width: 0; }
+.resume small { color: var(--muted); font-size: 12px; }
+.resume strong { display: block; font-size: 15px; }
+.resume .go { margin-left: auto; flex: none; background: var(--accent); color: var(--accent-ink); font-weight: 900; font-size: 13px; padding: 8px 12px; border-radius: 999px; }
+.works { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 16px 12px; }
+.work, .strip a { display: block; }
+.work img { width: 100%; aspect-ratio: 480 / 623; object-fit: cover; border-radius: 10px; display: block; background: var(--sub); }
+.work strong { display: block; margin-top: 8px; font-size: 15px; line-height: 1.35; }
+.work small { color: var(--muted); font-size: 13px; }
+.flag { display: inline-block; font-size: 11px; font-weight: 900; padding: 1px 6px; border-radius: 3px; background: var(--navy); color: var(--navy-ink); margin-right: 4px; vertical-align: 1px; }
+.strip { display: grid; grid-auto-flow: column; grid-auto-columns: 168px; gap: 12px; overflow-x: auto; padding-bottom: 8px; scroll-snap-type: x mandatory; }
+.strip a { scroll-snap-align: start; }
+.strip img { width: 100%; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 8px; display: block; background: var(--sub); }
+.strip strong { display: block; margin-top: 6px; font-size: 14px; }
+.strip small { color: var(--muted); font-size: 12px; }
+
+/* 작품홈 */
+.info { display: grid; grid-template-columns: 132px minmax(0, 1fr); gap: 16px; margin-top: 20px; align-items: start; }
+.info img { width: 100%; aspect-ratio: 480 / 623; object-fit: cover; border-radius: 10px; display: block; }
+.info h1 { font-size: 22px; font-weight: 900; line-height: 1.3; margin: 0; letter-spacing: -.02em; text-wrap: balance; }
+.info .by { color: var(--muted); font-size: 14px; margin: 4px 0 8px; }
+.info p { margin: 0; font-size: 14px; }
+.tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 10px; }
+.tags span { font-size: 12px; color: var(--muted); background: var(--chip); padding: 2px 8px; border-radius: 999px; }
+.cta { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin-top: 16px; }
+.btn { display: flex; align-items: center; justify-content: center; gap: 6px; height: 46px; border-radius: 10px; font-weight: 900; font-size: 15px; border: 1px solid var(--line); }
+.btn--main { background: var(--accent); color: var(--accent-ink); border-color: var(--accent); }
+.btn[aria-pressed="true"] { border-color: var(--navy); color: var(--navy); }
+.listhead { display: flex; align-items: center; justify-content: space-between; margin-top: 28px; padding-bottom: 10px; border-bottom: 2px solid var(--fg); }
+.listhead strong { font-size: 15px; }
+.sort { display: flex; gap: 2px; font-size: 13px; }
+.sort button { padding: 4px 8px; color: var(--muted); font-weight: 500; }
+.sort button[aria-pressed="true"] { color: var(--fg); font-weight: 900; }
+.eps { list-style: none; margin: 0; padding: 0; }
+.ep a { display: grid; grid-template-columns: 112px minmax(0, 1fr); gap: 14px; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.ep img { width: 100%; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 6px; display: block; background: var(--sub); }
+.ep strong { display: block; font-size: 15px; font-weight: 700; }
+.ep .meta { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; margin-top: 4px; font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.kind { background: var(--chip); padding: 1px 6px; border-radius: 3px; }
+.ep.is-read strong { color: var(--read); }
+.ep.is-read img { opacity: .55; }
+.mark { font-size: 11px; font-weight: 900; color: var(--accent-ink); background: var(--accent); padding: 1px 6px; border-radius: 3px; }
+.foot { margin-top: 40px; padding-block: 24px 40px; border-top: 1px solid var(--line); color: var(--muted); font-size: 12px; }
+.foot a { text-decoration: underline; }
+
+/* 뷰어 */
+.viewer { background: var(--viewer-bg); min-height: 100vh; }
+.vbar { position: fixed; left: 0; right: 0; z-index: 30; background: var(--bar); color: var(--bar-ink); transition: transform .25s ease; }
+.vbar--top { top: 0; padding-top: env(safe-area-inset-top, 0px); }
+.vbar--bot { bottom: 0; padding-bottom: env(safe-area-inset-bottom, 0px); }
+.vbar__in { max-width: var(--col); margin: 0 auto; height: 52px; display: flex; align-items: center; gap: 8px; padding-inline: 8px; }
+.vbar--top .t { flex: 1; min-width: 0; text-align: center; font-weight: 700; font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.vbar a, .vbar button { color: var(--bar-ink); padding: 8px 10px; border-radius: 8px; font-size: 14px; font-weight: 700; white-space: nowrap; }
+.vbar a[aria-disabled="true"] { opacity: .35; pointer-events: none; }
+.vbar--bot .vbar__in { justify-content: space-between; }
+.prog { position: absolute; left: 0; bottom: 0; height: 3px; background: var(--accent); width: 0; }
+.viewer.is-hidden .vbar--top { transform: translateY(-110%); }
+.viewer.is-hidden .vbar--bot { transform: translateY(110%); }
+.pages { max-width: 690px; margin: 0 auto; padding-top: 52px; }
+.pages img { display: block; width: 100%; height: auto; }
+.end { max-width: 690px; margin: 0 auto; padding: 28px 16px 120px; }
+.end h2 { font-size: 16px; margin: 0 0 12px; }
+.next { display: grid; grid-template-columns: 140px minmax(0, 1fr); gap: 14px; align-items: center; padding: 12px; border-radius: 12px; background: var(--sub); }
+.next img { width: 100%; aspect-ratio: 5 / 3; object-fit: cover; border-radius: 8px; display: block; }
+.next small { color: var(--muted); font-size: 12px; }
+.next strong { display: block; font-size: 16px; }
+.season-end { text-align: center; padding: 24px 12px; border-radius: 12px; background: var(--sub); }
+.season-end strong { font-family: var(--font-display); font-size: 24px; display: block; }
+.season-end p { margin: 6px 0 0; color: var(--muted); font-size: 14px; }
+@media (prefers-reduced-motion: reduce) { .vbar { transition: none; } }
+@media (max-width: 420px) { .info { grid-template-columns: 104px minmax(0, 1fr); } .ep a { grid-template-columns: 96px minmax(0, 1fr); } }
+</style>
+
+<div id="app"></div>
+
+<script id="data">window.SERIES = {"title": "아파트에 살고 있어요", "author": "아파트미어캣", "tagline": "시설팀 막내 미어캣의 민원 일지", "intro": "아파트 관리사무소 시설팀 막내 미어캣 주임. 민원 전화로 시작해서 민원 전화로 끝나는 하루를 그립니다.", "tags": ["일상툰", "코믹", "관리사무소", "동물", "시즌1완결"], "instagram": "https://www.instagram.com/jaehyeok121/", "episodes": [{"no": 1, "title": "알아서 잘", "kind": "층간소음", "summary": "위층이 밤마다 쿵쿵거린다는 민원. 소장님의 지시는 늘 '알아서 잘'이다.", "date": "2026-10-08", "thumb": "img/ep1/thumb.jpg", "pages": [["img/ep1/01.jpg", 690, 1169], ["img/ep1/02.jpg", 690, 790], ["img/ep1/03.jpg", 690, 1276], ["img/ep1/04.jpg", 690, 761], ["img/ep1/05.jpg", 690, 721], ["img/ep1/06.jpg", 690, 831], ["img/ep1/07.jpg", 690, 589], ["img/ep1/08.jpg", 690, 761], ["img/ep1/09.jpg", 690, 721], ["img/ep1/10.jpg", 690, 624], ["img/ep1/11.jpg", 690, 1280], ["img/ep1/12.jpg", 690, 1280], ["img/ep1/13.jpg", 690, 724], ["img/ep1/14.jpg", 690, 1013], ["img/ep1/15.jpg", 690, 624], ["img/ep1/16.jpg", 690, 721], ["img/ep1/17.jpg", 690, 943], ["img/ep1/18.jpg", 690, 1152], ["img/ep1/19.jpg", 690, 894], ["img/ep1/20.jpg", 690, 1280], ["img/ep1/21.jpg", 690, 964], ["img/ep1/22.jpg", 690, 721], ["img/ep1/23.jpg", 690, 1280]]}, {"no": 2, "title": "층간흡연", "kind": "층간흡연", "summary": "밤 10시마다 화장실로 올라오는 담배 냄새. 아래층은 금연 3년째다.", "date": "2026-10-08", "thumb": "img/ep2/thumb.jpg", "pages": [["img/ep2/01.jpg", 690, 821], ["img/ep2/02.jpg", 690, 1280], ["img/ep2/03.jpg", 690, 867], ["img/ep2/04.jpg", 690, 658], ["img/ep2/05.jpg", 690, 825], ["img/ep2/06.jpg", 690, 721], ["img/ep2/07.jpg", 690, 721], ["img/ep2/08.jpg", 690, 944], ["img/ep2/09.jpg", 690, 761], ["img/ep2/10.jpg", 690, 693], ["img/ep2/11.jpg", 690, 1280], ["img/ep2/12.jpg", 690, 763], ["img/ep2/13.jpg", 690, 944], ["img/ep2/14.jpg", 690, 1280], ["img/ep2/15.jpg", 690, 751], ["img/ep2/16.jpg", 690, 721], ["img/ep2/17.jpg", 690, 900], ["img/ep2/18.jpg", 690, 1247], ["img/ep2/19.jpg", 690, 1275], ["img/ep2/20.jpg", 690, 859], ["img/ep2/21.jpg", 690, 624], ["img/ep2/22.jpg", 690, 721], ["img/ep2/23.jpg", 690, 693], ["img/ep2/24.jpg", 690, 1276]]}, {"no": 3, "title": "누수", "kind": "누수", "summary": "천장에서 물이 떨어진다. 소장님이 이상하게 앞장선다.", "date": "2026-10-09", "thumb": "img/ep3/thumb.jpg", "pages": [["img/ep3/01.jpg", 690, 752], ["img/ep3/02.jpg", 690, 1280], ["img/ep3/03.jpg", 690, 764], ["img/ep3/04.jpg", 690, 755], ["img/ep3/05.jpg", 690, 721], ["img/ep3/06.jpg", 690, 1247], ["img/ep3/07.jpg", 690, 721], ["img/ep3/08.jpg", 690, 790], ["img/ep3/09.jpg", 690, 722], ["img/ep3/10.jpg", 690, 1152], ["img/ep3/11.jpg", 690, 721], ["img/ep3/12.jpg", 690, 623], ["img/ep3/13.jpg", 690, 721], ["img/ep3/14.jpg", 690, 722], ["img/ep3/15.jpg", 690, 721], ["img/ep3/16.jpg", 690, 1037], ["img/ep3/17.jpg", 690, 790], ["img/ep3/18.jpg", 690, 1213], ["img/ep3/19.jpg", 690, 658], ["img/ep3/20.jpg", 690, 721], ["img/ep3/21.jpg", 690, 727], ["img/ep3/22.jpg", 690, 693], ["img/ep3/23.jpg", 690, 721], ["img/ep3/24.jpg", 690, 721], ["img/ep3/25.jpg", 690, 1276]]}, {"no": 4, "title": "도어락", "kind": "출입 문제", "summary": "1204호 할머니가 현관 도어락 비밀번호를 잊으셨다. 관리사무소는 세대 문을 열어 줄 수 없다.", "date": "2026-10-10", "thumb": "img/ep4/thumb.jpg", "pages": [["img/ep4/01.jpg", 690, 1280], ["img/ep4/02.jpg", 690, 651], ["img/ep4/03.jpg", 690, 1280], ["img/ep4/04.jpg", 690, 659], ["img/ep4/05.jpg", 690, 762], ["img/ep4/06.jpg", 690, 761], ["img/ep4/07.jpg", 690, 791], ["img/ep4/08.jpg", 690, 1109], ["img/ep4/09.jpg", 690, 1212], ["img/ep4/10.jpg", 690, 693], ["img/ep4/11.jpg", 690, 721], ["img/ep4/12.jpg", 690, 762], ["img/ep4/13.jpg", 690, 658], ["img/ep4/14.jpg", 690, 790], ["img/ep4/15.jpg", 690, 721], ["img/ep4/16.jpg", 690, 1280], ["img/ep4/17.jpg", 690, 1249], ["img/ep4/18.jpg", 690, 1089], ["img/ep4/19.jpg", 690, 693], ["img/ep4/20.jpg", 690, 692], ["img/ep4/21.jpg", 690, 900], ["img/ep4/22.jpg", 690, 1276]]}, {"no": 5, "title": "주차", "kind": "이중 주차", "summary": "출근길 SUV 앞을 막아선 회색 차. 뒷좌석엔 낯익은 보라색 요가 매트가 있다.", "date": "2026-10-10", "thumb": "img/ep5/thumb.jpg", "pages": [["img/ep5/01.jpg", 690, 649], ["img/ep5/02.jpg", 690, 1275], ["img/ep5/03.jpg", 690, 1110], ["img/ep5/04.jpg", 690, 1275], ["img/ep5/05.jpg", 690, 624], ["img/ep5/06.jpg", 690, 761], ["img/ep5/07.jpg", 690, 1276], ["img/ep5/08.jpg", 690, 721], ["img/ep5/09.jpg", 690, 790], ["img/ep5/10.jpg", 690, 762], ["img/ep5/11.jpg", 690, 658], ["img/ep5/12.jpg", 690, 761], ["img/ep5/13.jpg", 690, 721], ["img/ep5/14.jpg", 690, 721], ["img/ep5/15.jpg", 690, 1280], ["img/ep5/16.jpg", 690, 764], ["img/ep5/17.jpg", 690, 1275], ["img/ep5/18.jpg", 690, 831], ["img/ep5/19.jpg", 690, 1280], ["img/ep5/20.jpg", 690, 1243], ["img/ep5/21.jpg", 690, 1276]]}, {"no": 6, "title": "택배", "kind": "택배 분실", "summary": "1104호 택배가 사라졌다. CCTV에 찍힌 건 비 오는 날 상자를 안고 가는 작은 그림자.", "date": "2026-10-10", "thumb": "img/ep6/thumb.jpg", "pages": [["img/ep6/01.jpg", 690, 1203], ["img/ep6/02.jpg", 690, 1280], ["img/ep6/03.jpg", 690, 1209], ["img/ep6/04.jpg", 690, 623], ["img/ep6/05.jpg", 690, 928], ["img/ep6/06.jpg", 690, 831], ["img/ep6/07.jpg", 690, 1089], ["img/ep6/08.jpg", 690, 1144], ["img/ep6/09.jpg", 690, 859], ["img/ep6/10.jpg", 690, 1020], ["img/ep6/11.jpg", 690, 1144], ["img/ep6/12.jpg", 690, 1227], ["img/ep6/13.jpg", 690, 1179], ["img/ep6/14.jpg", 690, 1280], ["img/ep6/15.jpg", 690, 728], ["img/ep6/16.jpg", 690, 722], ["img/ep6/17.jpg", 690, 692], ["img/ep6/18.jpg", 690, 1247], ["img/ep6/19.jpg", 690, 659]]}, {"no": 7, "title": "엘리베이터", "kind": "승강기 고장", "summary": "층 사이에 멈춘 엘리베이터. 안에는 소장님과 멧돼지 입주민 단둘이다.", "date": "2026-10-10", "thumb": "img/ep7/thumb.jpg", "pages": [["img/ep7/01.jpg", 690, 1280], ["img/ep7/02.jpg", 690, 1234], ["img/ep7/03.jpg", 690, 721], ["img/ep7/04.jpg", 690, 692], ["img/ep7/05.jpg", 690, 1280], ["img/ep7/06.jpg", 690, 1180], ["img/ep7/07.jpg", 690, 721], ["img/ep7/08.jpg", 690, 1276], ["img/ep7/09.jpg", 690, 623], ["img/ep7/10.jpg", 690, 756], ["img/ep7/11.jpg", 690, 790], ["img/ep7/12.jpg", 690, 1280], ["img/ep7/13.jpg", 690, 1180], ["img/ep7/14.jpg", 690, 1275], ["img/ep7/15.jpg", 690, 535], ["img/ep7/16.jpg", 690, 899], ["img/ep7/17.jpg", 690, 1179], ["img/ep7/18.jpg", 690, 1280], ["img/ep7/19.jpg", 690, 1280]]}, {"no": 8, "title": "분리수거", "kind": "분리배출", "summary": "음식물 쓰레기통에 치킨 뼈와 컵라면 용기. 매일 밤 11시의 야식 흔적을 쫓는다.", "date": "2026-10-10", "thumb": "img/ep8/thumb.jpg", "pages": [["img/ep8/01.jpg", 690, 683], ["img/ep8/02.jpg", 690, 825], ["img/ep8/03.jpg", 690, 1178], ["img/ep8/04.jpg", 690, 1280], ["img/ep8/05.jpg", 690, 625], ["img/ep8/06.jpg", 690, 762], ["img/ep8/07.jpg", 690, 1280], ["img/ep8/08.jpg", 690, 1277], ["img/ep8/09.jpg", 690, 1247], ["img/ep8/10.jpg", 690, 1276], ["img/ep8/11.jpg", 690, 1020], ["img/ep8/12.jpg", 690, 1179], ["img/ep8/13.jpg", 690, 761], ["img/ep8/14.jpg", 690, 1280], ["img/ep8/15.jpg", 690, 591], ["img/ep8/16.jpg", 690, 1280], ["img/ep8/17.jpg", 690, 1249], ["img/ep8/18.jpg", 690, 1276]]}, {"no": 9, "title": "짖는 소리", "kind": "소음", "summary": "밤마다 들리는 개 짖는 소리. 그런데 이 동에는 개를 키우는 집이 없다.", "date": "2026-10-10", "thumb": "img/ep9/thumb.jpg", "pages": [["img/ep9/01.jpg", 690, 1238], ["img/ep9/02.jpg", 690, 1280], ["img/ep9/03.jpg", 690, 1229], ["img/ep9/04.jpg", 690, 1213], ["img/ep9/05.jpg", 690, 1212], ["img/ep9/06.jpg", 690, 721], ["img/ep9/07.jpg", 690, 1247], ["img/ep9/08.jpg", 690, 1280], ["img/ep9/09.jpg", 690, 1280], ["img/ep9/10.jpg", 690, 656], ["img/ep9/11.jpg", 690, 692], ["img/ep9/12.jpg", 690, 1153], ["img/ep9/13.jpg", 690, 1178], ["img/ep9/14.jpg", 690, 1280], ["img/ep9/15.jpg", 690, 1160], ["img/ep9/16.jpg", 690, 1280], ["img/ep9/17.jpg", 690, 591]]}, {"no": 10, "title": "동대표", "kind": "동대표 선거", "summary": "동대표 선거 후보가 아무도 없다. 시즌 1 마지막 화.", "date": "2026-10-10", "thumb": "img/ep10/thumb.jpg", "pages": [["img/ep10/01.jpg", 690, 1169], ["img/ep10/02.jpg", 690, 1280], ["img/ep10/03.jpg", 690, 1280], ["img/ep10/04.jpg", 690, 1113], ["img/ep10/05.jpg", 690, 721], ["img/ep10/06.jpg", 690, 1178], ["img/ep10/07.jpg", 690, 1221], ["img/ep10/08.jpg", 690, 721], ["img/ep10/09.jpg", 690, 1280], ["img/ep10/10.jpg", 690, 792], ["img/ep10/11.jpg", 690, 1055], ["img/ep10/12.jpg", 690, 1280], ["img/ep10/13.jpg", 690, 1280], ["img/ep10/14.jpg", 690, 759], ["img/ep10/15.jpg", 690, 1124], ["img/ep10/16.jpg", 690, 1193], ["img/ep10/17.jpg", 690, 1280]]}]};</script>
+<script>
+(() => {
+  const S = window.SERIES;
+  const app = document.getElementById("app");
+  const eps = S.episodes;
+  const last = eps[eps.length - 1];
+  const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+  const dot = (d) => d.slice(2).replaceAll("-", ".");
+
+  // 로그인 없이 이 브라우저에만 저장: 읽은 화, 마지막 위치, 관심, 정렬
+  const store = {
+    get(k, d) { try { const v = localStorage.getItem("mhb:" + k); return v == null ? d : JSON.parse(v); } catch { return d; } },
+    set(k, v) { try { localStorage.setItem("mhb:" + k, JSON.stringify(v)); } catch {} },
+  };
+
+  const top = (cur) => `
+    <header class="top"><div class="wrap top__in">
+      <a class="brand" href="#home"><img src="img/logo.jpg" alt="" width="30" height="30">아파트 <b>만화방</b></a>
+      <nav aria-label="메뉴">
+        <a href="#home" ${cur === "home" ? 'aria-current="page"' : ""}>홈</a>
+        <a href="#series" ${cur === "series" ? 'aria-current="page"' : ""}>작품</a>
+      </nav>
+    </div></header>`;
+
+  const foot = () => `<footer class="foot wrap">로그인 없이 누구나 볼 수 있어요. 읽은 기록은 이 브라우저에만 남아요.<br>
+    작가 인스타그램 <a href="${esc(S.instagram)}" target="_blank" rel="noopener">@${esc(S.instagram.split("/").filter(Boolean).pop())}</a></footer>`;
+
+  function resumeCard() {
+    const r = store.get("last", null);
+    const e = r && eps.find((x) => x.no === r.no);
+    if (!e) return "";
+    return `<section class="sec" aria-labelledby="h-resume"><div class="sec__head"><h2 class="sec__title" id="h-resume">이어보기</h2></div>
+      <a class="resume" href="#ep${e.no}"><img src="${e.thumb}" alt="" width="96" height="58">
+      <div><small>${esc(S.title)}</small><strong>${e.no}화 「${esc(e.title)}」</strong></div><span class="go">계속 보기</span></a></section>`;
+  }
+
+  function home() {
+    return top("home") + `<main class="wrap">
+      <a class="hero" href="#series" aria-label="${esc(S.title)} 작품홈으로">
+        <img src="img/banner.jpg" alt="관리사무소 직원 다섯 명이 아파트 앞에 서 있는 그림" onerror="this.src='img/ep10/thumb.jpg'">
+        <div class="hero__txt"><span class="hero__badge">시즌 1 완결 · 10화</span>
+          <h1 class="hero__title">${esc(S.title)}</h1><p class="hero__sub">${esc(S.tagline)}</p></div>
+      </a>
+      ${resumeCard()}
+      <section class="sec" aria-labelledby="h-works"><div class="sec__head"><h2 class="sec__title" id="h-works">연재 작품</h2><a class="sec__more" href="#series">전체보기</a></div>
+        <div class="works"><a class="work" href="#series"><img src="img/poster.jpg" alt="" width="480" height="623">
+          <strong><span class="flag">완결</span>${esc(S.title)}</strong><small>${esc(S.author)}</small></a></div>
+      </section>
+      <section class="sec" aria-labelledby="h-eps"><div class="sec__head"><h2 class="sec__title" id="h-eps">회차 바로 보기</h2><a class="sec__more" href="#series">목록</a></div>
+        <div class="strip">${[...eps].reverse().map((e) => `<a href="#ep${e.no}"><img src="${e.thumb}" alt="" width="168" height="101" loading="lazy">
+          <strong>${e.no}화 「${esc(e.title)}」</strong><small>${esc(e.kind)}</small></a>`).join("")}</div>
+      </section>
+    </main>` + foot();
+  }
+
+  function series() {
+    const read = store.get("read", []);
+    const r = store.get("last", null);
+    const asc = store.get("asc", false);
+    const fav = store.get("fav", false);
+    const list = asc ? eps : [...eps].reverse();
+    const first = r ? eps.find((x) => x.no === r.no) : null;
+    return top("series") + `<main class="wrap">
+      <section class="info">
+        <img src="img/poster.jpg" alt="${esc(S.title)} 포스터" width="480" height="623">
+        <div><h1>${esc(S.title)}</h1><p class="by">글·그림 ${esc(S.author)} · <span class="flag">완결</span>시즌 1</p>
+          <p>${esc(S.intro)}</p>
+          <div class="tags">${S.tags.map((t) => `<span>#${esc(t)}</span>`).join("")}</div></div>
+      </section>
+      <div class="cta">
+        <a class="btn btn--main" href="#ep${first ? first.no : 1}">${first ? `이어보기 ${first.no}화` : "첫화 보기"}</a>
+        <button class="btn" id="fav" type="button" aria-pressed="${fav}">${fav ? "관심 웹툰 ✓" : "관심 웹툰 +"}</button>
+      </div>
+      <div class="listhead"><strong>총 ${eps.length}화</strong>
+        <div class="sort" role="group" aria-label="정렬">
+          <button type="button" id="s-desc" aria-pressed="${!asc}">최신순</button>
+          <button type="button" id="s-asc" aria-pressed="${asc}">1화부터</button></div></div>
+      <ol class="eps">${list.map((e) => `<li class="ep ${read.includes(e.no) ? "is-read" : ""}"><a href="#ep${e.no}">
+        <img src="${e.thumb}" alt="" width="112" height="67" loading="lazy">
+        <div><strong>${e.no}화 「${esc(e.title)}」</strong>
+          <div class="meta"><span class="kind">${esc(e.kind)}</span><span>${dot(e.date)}</span>
+            ${r && r.no === e.no ? '<span class="mark">이어보기</span>' : ""}${e === last ? '<span class="mark">최종화</span>' : ""}</div></div></a></li>`).join("")}</ol>
+    </main>` + foot();
+  }
+
+  function viewer(no) {
+    const i = eps.findIndex((x) => x.no === no);
+    const e = eps[i], prev = eps[i - 1], next = eps[i + 1];
+    return `<div class="viewer" id="v">
+      <div class="vbar vbar--top"><div class="vbar__in">
+        <a href="#series" aria-label="목록으로">← 목록</a><span class="t">${e.no}화 「${esc(e.title)}」</span>
+        <a href="#home" aria-label="만화방 홈">홈</a></div><div class="prog" id="prog"></div></div>
+      <div class="pages" id="pages">${e.pages.map(([src, w, h], k) =>
+        `<img src="${src}" width="${w}" height="${h}" alt="${k === 0 ? `${e.no}화 ${esc(e.title)} 본문` : ""}" ${k > 1 ? 'loading="lazy"' : ""} decoding="async">`).join("")}</div>
+      <div class="end">${next ? `<h2>다음 화</h2><a class="next" href="#ep${next.no}"><img src="${next.thumb}" alt="" width="140" height="84" loading="lazy">
+          <div><small>${esc(next.kind)}</small><strong>${next.no}화 「${esc(next.title)}」</strong></div></a>`
+        : `<div class="season-end"><strong>시즌 1 끝</strong><p>끝까지 봐 주셔서 고마워요. 시즌 2에서 다시 만나요.</p></div>`}</div>
+      <div class="vbar vbar--bot"><div class="vbar__in">
+        <a href="${prev ? "#ep" + prev.no : "#"}" ${prev ? "" : 'aria-disabled="true"'}>‹ 이전화</a>
+        <a href="#series">목록</a>
+        <a href="${next ? "#ep" + next.no : "#"}" ${next ? "" : 'aria-disabled="true"'}>다음화 ›</a></div></div>
+    </div>`;
+  }
+
+  let off = [];
+  function route() {
+    off.forEach((f) => f()); off = [];
+    const h = location.hash.slice(1) || "home";
+    const m = /^ep(\d+)$/.exec(h);
+    const no = m && +m[1];
+    if (no && eps.some((x) => x.no === no)) {
+      app.innerHTML = viewer(no);
+      document.title = `${no}화 · ${S.title}`;
+      window.scrollTo(0, 0);
+      bindViewer(no);
+    } else if (h === "series") {
+      app.innerHTML = series(); document.title = `${S.title} · 아파트 만화방`; window.scrollTo(0, 0); bindSeries();
+    } else {
+      app.innerHTML = home(); document.title = "아파트 만화방"; window.scrollTo(0, 0);
+    }
+  }
+
+  function bindSeries() {
+    const rerender = () => { const y = scrollY; app.innerHTML = series(); bindSeries(); scrollTo(0, y); };
+    document.getElementById("fav").onclick = () => { store.set("fav", !store.get("fav", false)); rerender(); };
+    document.getElementById("s-desc").onclick = () => { store.set("asc", false); rerender(); };
+    document.getElementById("s-asc").onclick = () => { store.set("asc", true); rerender(); };
+  }
+
+  function bindViewer(no) {
+    const v = document.getElementById("v"), prog = document.getElementById("prog");
+    const read = store.get("read", []);
+    if (!read.includes(no)) store.set("read", [...read, no]);
+    const saved = store.get("last", null);
+    if (saved && saved.no === no && saved.y > 400) setTimeout(() => scrollTo(0, saved.y), 60);
+    let lastY = scrollY, t = 0;
+    const onScroll = () => {
+      const max = document.documentElement.scrollHeight - innerHeight;
+      prog.style.width = (max > 0 ? (scrollY / max) * 100 : 0) + "%";
+      // 아래로 읽어 내려가면 바를 숨기고, 위로 올리거나 끝에 닿으면 보인다
+      if (scrollY > lastY + 8 && scrollY > 80) v.classList.add("is-hidden");
+      else if (scrollY < lastY - 8 || scrollY >= max - 4) v.classList.remove("is-hidden");
+      lastY = scrollY;
+      clearTimeout(t); t = setTimeout(() => store.set("last", { no, y: Math.round(scrollY) }), 200);
+    };
+    const onTap = (ev) => { if (ev.target.closest("#pages")) v.classList.toggle("is-hidden"); };
+    const onKey = (ev) => {
+      const i = eps.findIndex((x) => x.no === no);
+      if (ev.key === "ArrowRight" && eps[i + 1]) location.hash = "ep" + eps[i + 1].no;
+      if (ev.key === "ArrowLeft" && eps[i - 1]) location.hash = "ep" + eps[i - 1].no;
+    };
+    addEventListener("scroll", onScroll, { passive: true });
+    v.addEventListener("click", onTap);
+    addEventListener("keydown", onKey);
+    off.push(() => { removeEventListener("scroll", onScroll); removeEventListener("keydown", onKey); });
+    store.set("last", { no, y: (saved && saved.no === no) ? saved.y : 0 });
+  }
+
+  addEventListener("hashchange", route);
+  route();
+})();
+</script>
